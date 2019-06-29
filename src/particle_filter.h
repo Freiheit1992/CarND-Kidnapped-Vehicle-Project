@@ -29,7 +29,7 @@ class ParticleFilter {
  public:
   // Constructor
   // @param num_particles Number of particles
-  ParticleFilter() : num_particles(0), is_initialized(false) {}
+  ParticleFilter() : is_initialized(false) {}
 
   // Destructor
   ~ParticleFilter() {}
@@ -63,9 +63,10 @@ class ParticleFilter {
    * @param predicted Vector of predicted landmark observations
    * @param observations Vector of landmark observations
    */
-  void dataAssociation(std::vector<LandmarkObs> predicted, 
+  void dataAssociation(const Map &map_landmarks, 
                        std::vector<LandmarkObs>& observations);
-  
+  // void dataAssociation(std::vector<LandmarkObs> predicted, 
+  //                      std::vector<LandmarkObs>& observations);  
   /**
    * updateWeights Updates the weights for each particle based on the likelihood
    *   of the observed measurements. 
@@ -113,7 +114,7 @@ class ParticleFilter {
 
  private:
   // Number of particles to draw
-  int num_particles; 
+  enum{num_particles = 200}; 
   
   // Flag, if filter is initialized
   bool is_initialized;

@@ -46,6 +46,12 @@ struct LandmarkObs {
   int id;     // Id of matching landmark in the map.
   double x;   // Local (vehicle coords) x position of landmark observation [m]
   double y;   // Local (vehicle coords) y position of landmark observation [m]
+
+  LandmarkObs() = default;
+
+  LandmarkObs(double x_, double y_) : id(-1), x(x_), y(y_)
+  {
+  }
 };
 
 /**
@@ -246,6 +252,24 @@ inline bool read_landmark_data(std::string filename,
     observations.push_back(meas);
   }
   return true;
+}
+
+inline double multiv_prob(double mu_x, double mu_y, double x_obs, double y_obs,
+                   double std_landmark[]) {
+  // calculate normalization term
+  double gauss_norm;
+  gauss_norm = 1 / (2 * M_PI * std_landmark[0] * std_landmark[1]);
+
+  // calculate exponent
+  double exponent;
+  exponent = (pow(x_obs - mu_x, 2) / (2 * pow(std_landmark[0], 2)))
+               + (pow(y_obs - mu_y, 2) / (2 * pow(std_landmark[1], 2)));
+    
+  // calculate weight using normalization terms and exponent
+  double weight;
+  weight = gauss_norm * exp(-exponent);
+    
+  return weight;
 }
 
 #endif  // HELPER_FUNCTIONS_H_
